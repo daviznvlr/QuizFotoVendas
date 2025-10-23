@@ -171,10 +171,17 @@ export default function QuizFunnel() {
   };
 
   const handleTestimonialsContinue = () => {
-    simulateLoading(() => {
-      goToNextStep();
-    }, 2000);
+    goToNextStep();
   };
+
+  // Auto-start loading animation when reaching step 12
+  useEffect(() => {
+    if (currentStep === 12) {
+      simulateLoading(() => {
+        goToNextStep();
+      }, 2500);
+    }
+  }, [currentStep]);
 
   const handlePlanReadyContinue = () => {
     goToNextStep();
