@@ -2,10 +2,10 @@ import { ArrowLeft, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react
 import { Button } from "@/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback } from "react";
-import panettone1 from "@assets/image_1760984315004.png";
-import panettone2 from "@assets/image_1760984345600.png";
-import panettone3 from "@assets/image_1760984358333.png";
-import panettone4 from "@assets/image_1760984364777.png";
+import panettone1 from "@assets/image_1761261479388.png";
+import panettone2 from "@assets/image_1761261494539.png";
+import panettone3 from "@assets/image_1761261527264.png";
+import panettone4 from "@assets/image_1761261560092.png";
 
 interface PlanReadyScreenProps {
   onContinue: () => void;
