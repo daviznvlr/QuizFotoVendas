@@ -127,7 +127,7 @@ export function FinalCheckoutScreen({ onCheckout, onBack }: FinalCheckoutScreenP
                 <div className="bg-yellow-300 px-6 py-3 rounded-md">
                   <p className="text-xs text-foreground">Por apenas</p>
                   <p className="text-3xl font-bold text-green-600" data-testid="text-price-new">
-                    R$ 39,90
+                    R$ 19,90
                   </p>
                 </div>
               </div>
