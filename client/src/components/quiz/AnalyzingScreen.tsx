@@ -15,8 +15,8 @@ export function AnalyzingScreen({ sessionId, onComplete, onBack }: AnalyzingScre
   const { data: profile, error, refetch } = useQuery<ProfileResult>({
     queryKey: [`/api/profile/${sessionId}`],
     enabled: !!sessionId,
-    retry: 10,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 3000),
+    retry: 3,
+    retryDelay: 1000,
     staleTime: 0,
   });
 
@@ -24,8 +24,20 @@ export function AnalyzingScreen({ sessionId, onComplete, onBack }: AnalyzingScre
     if (profile) {
       // Profile loaded successfully, navigate to results
       onComplete(profile);
+    } else if (!sessionId) {
+      // No session, use default profile
+      const defaultProfile: ProfileResult = {
+        potential: "Alto",
+        score: 85,
+        insights: [
+          "Você tem grande potencial para ganhar dinheiro extra vendendo panetones gourmet este Natal!",
+          "Sua disposição para aprender coisas novas é um diferencial importante",
+          "O mercado de panetones gourmet está em crescimento"
+        ]
+      };
+      setTimeout(() => onComplete(defaultProfile), 2000);
     }
-  }, [profile, onComplete]);
+  }, [profile, onComplete, sessionId]);
 
   if (error) {
     return (

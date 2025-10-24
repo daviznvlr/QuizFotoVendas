@@ -25,26 +25,21 @@ export default function QuizFunnel() {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const { toast } = useToast();
 
-  // Initialize session on mount
-  useEffect(() => {
-    const initSession = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch("/api/quiz-session", { method: "POST" });
-        const data = await response.json();
-        setSessionId(data.sessionId);
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: "Erro",
-          description: "Não foi possível iniciar a sessão. Por favor, recarregue a página.",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    initSession();
-  }, [toast]);
+  // Initialize session lazily on first interaction
+  const ensureSession = async () => {
+    if (sessionId) return sessionId;
+    
+    try {
+      const response = await fetch("/api/quiz-session", { method: "POST" });
+      const data = await response.json();
+      setSessionId(data.sessionId);
+      return data.sessionId;
+    } catch (error) {
+      // Silently fail - quiz can still work without backend
+      console.warn("Could not initialize session:", error);
+      return null;
+    }
+  };
 
   // Mutation to save quiz responses
   const saveResponseMutation = useMutation({
@@ -64,26 +59,19 @@ export default function QuizFunnel() {
   });
 
   const updateQuizState = async (updates: Partial<QuizState>) => {
-    // Wait for sessionId to be initialized
-    let waitTime = 0;
-    while (!sessionId && waitTime < 5000) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-      waitTime += 100;
-    }
-
-    if (!sessionId || sessionId.trim() === '') {
-      toast({
-        title: "Erro",
-        description: "Não foi possível iniciar a sessão. Por favor, recarregue a página.",
-        variant: "destructive",
-      });
-      throw new Error("Session not initialized");
-    }
-
+    // Update local state immediately
     setQuizState((prev) => ({ ...prev, ...updates }));
     
-    // Save to backend with valid sessionId
-    await saveResponseMutation.mutateAsync(updates);
+    // Try to save to backend, but don't block if it fails
+    try {
+      const sid = await ensureSession();
+      if (sid) {
+        await saveResponseMutation.mutateAsync(updates);
+      }
+    } catch (error) {
+      // Silently fail - quiz continues to work
+      console.warn("Could not save quiz state:", error);
+    }
   };
 
   const simulateLoading = (callback: () => void, duration = 2000) => {
