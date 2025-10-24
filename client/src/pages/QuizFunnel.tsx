@@ -64,11 +64,17 @@ export default function QuizFunnel() {
   });
 
   const updateQuizState = async (updates: Partial<QuizState>) => {
-    // Guard: Ensure sessionId is initialized
+    // Wait for sessionId to be initialized
+    let waitTime = 0;
+    while (!sessionId && waitTime < 5000) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      waitTime += 100;
+    }
+
     if (!sessionId || sessionId.trim() === '') {
       toast({
         title: "Erro",
-        description: "Sessão não inicializada. Por favor, aguarde ou recarregue a página.",
+        description: "Não foi possível iniciar a sessão. Por favor, recarregue a página.",
         variant: "destructive",
       });
       throw new Error("Session not initialized");
@@ -239,17 +245,6 @@ export default function QuizFunnel() {
 
   if (isLoading) {
     return <LoadingScreen progress={loadingProgress} />;
-  }
-
-  // Ensure session is initialized before rendering quiz
-  if (!sessionId) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6">
-        <div className="text-center space-y-4">
-          <p className="text-lg font-medium">Inicializando sessão...</p>
-        </div>
-      </div>
-    );
   }
 
   return (
