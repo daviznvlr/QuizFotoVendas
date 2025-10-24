@@ -135,12 +135,14 @@ export function FinalCheckoutScreen({ onCheckout, onBack }: FinalCheckoutScreenP
           </Card>
 
           <Button
-            onClick={onCheckout}
+            asChild
             size="lg"
             className="w-full max-w-md bg-success hover:bg-success/90 text-success-foreground animate-pulse-cta"
             data-testid="button-checkout"
           >
-            COMPRAR AGORA
+            <a href="https://pay.kiwify.com.br/gDLcgEB" target="_blank" rel="noopener noreferrer">
+              COMPRAR AGORA
+            </a>
           </Button>
 
           <div className="w-full max-w-md space-y-4 mt-4">
