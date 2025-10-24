@@ -3,7 +3,7 @@ import { ArrowLeft, Clock, Frown, Smile, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import beforeImage from "@assets/image_1760984396828.png";
-import afterImage from "@assets/image_1760984406386.png";
+import afterImage from "@assets/SaveClip.App_566401362_18340939615203749_2169125330666957429_n_1761268003418.jpg";
 
 interface FinalCheckoutScreenProps {
   onCheckout: () => void;
